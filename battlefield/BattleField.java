@@ -9,15 +9,15 @@ public class BattleField implements Drawable {
     private int BF_HEIGHT = 576;
 
     private String[][] battleField = {
-            {"B", " ", "R", "B", "B", "B", "B", "B", "B"},
+            {" ", " ", "B", "B", "B", "B", "B", "B", "B"},
             {"B", " ", " ", " ", " ", " ", " ", " ", "B"},
-            {"B", "B", " ", " ", "B", " ", " ", "R", "B"},
-            {"B", " ", " ", " ", " ", " ", "R", " ", "B"},
+            {"B", "B", " ", " ", "B", " ", " ", "B", "B"},
+            {"B", " ", " ", " ", " ", " ", "B", " ", "B"},
             {"B", " ", "B", " ", " ", " ", " ", " ", "B"},
             {" ", " ", " ", "B", " ", "B", " ", "B", "B"},
-            {" ", "B", " ", "W", "W", "W", " ", "B", "B"},
+            {" ", "B", " ", "B", "B", "B", " ", "B", "B"},
             {" ", " ", " ", " ", " ", " ", " ", " ", "B"},
-            {"B", " ", " ", "B", "E", " ", " ", " ", "B"}};
+            {"B", " ", " ", " ", "E", " ", " ", " ", "B"}};
 
     private FieldObject[][] objBattleField = new FieldObject[9][9];
 
@@ -114,5 +114,9 @@ public class BattleField implements Drawable {
     public void destroyObject(int v, int h) {
 
         objBattleField[v][h].destroy();
+    }
+
+    public String[][] getStringBattleField() {
+        return battleField;
     }
 }

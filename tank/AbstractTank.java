@@ -1,8 +1,7 @@
 package lesson5_8.tank5.tank;
 
 import lesson5_8.tank5.actionfield.ActionField;
-import lesson5_8.tank5.battlefield.BattleField;
-import lesson5_8.tank5.battlefield.Brick;
+import lesson5_8.tank5.battlefield.*;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -13,24 +12,27 @@ import java.io.IOException;
 public abstract class AbstractTank implements Tank {
 
 
+    protected Algo algo;
+    protected Algo algo2;
+    protected Algo algo3;
     private Direction direction;
 
-    private int x = 128;
-    private int y = 512;
+    private Bullet bullet;
+
+    private int x;
+    private int y;
 
     private int speed = 10;
     private boolean destroyed;
 
-    protected Color tankColor;
-    protected Color towerColor;
-    private final static String IMAGE_NAME_UP = "t34_up.png";
-    private final static String IMAGE_NAME_DOWN = "t34_down.png";
-    private final static String IMAGE_NAME_LEFT = "t34_lft.png";
-    private final static String IMAGE_NAME_RIGHT = "t34_rght.png";
-    private Image myTankImage1;
-    private Image myTankImage2;
-    private Image myTankImage3;
-    private Image myTankImage4;
+    protected static String IMAGE_NAME_UP;
+    protected static String IMAGE_NAME_DOWN;
+    protected static String IMAGE_NAME_LEFT;
+    protected static String IMAGE_NAME_RIGHT;
+    protected Image myTankImageUp;
+    protected Image myTankImageDown;
+    protected Image myTankImageLeft;
+    protected Image myTankImageRight;
 
 //    нет actionField
     private ActionField actionField;
@@ -38,30 +40,10 @@ public abstract class AbstractTank implements Tank {
 
     public AbstractTank() {
 
-        try {
-            myTankImage1 = ImageIO.read(new File(IMAGE_NAME_UP));
-            myTankImage2 = ImageIO.read(new File(IMAGE_NAME_DOWN));
-            myTankImage3 = ImageIO.read(new File(IMAGE_NAME_LEFT));
-            myTankImage4 = ImageIO.read(new File(IMAGE_NAME_RIGHT));
-        }
-        catch (IOException e) {
-            System.err.print("Can't find image ");
-        }
     }
 
     public AbstractTank(ActionField actionField, BattleField battleField) {
-        this(actionField, battleField, 128, 128, Direction.UP);
-        towerColor = new Color(70, 70, 70);
-        tankColor = new Color(0, 255, 0);
-        try {
-            myTankImage1 = ImageIO.read(new File(IMAGE_NAME_UP));
-            myTankImage2 = ImageIO.read(new File(IMAGE_NAME_DOWN));
-            myTankImage3 = ImageIO.read(new File(IMAGE_NAME_LEFT));
-            myTankImage4 = ImageIO.read(new File(IMAGE_NAME_RIGHT));
-        }
-        catch (IOException e) {
-            System.err.print("Can't find image ");
-        }
+        this(actionField, battleField, 64, 448, Direction.UP);
     }
 
     public AbstractTank(ActionField actionField, BattleField battleField, int x, int y, Direction direction) {
@@ -71,17 +53,6 @@ public abstract class AbstractTank implements Tank {
         this.x = x;
         this.y = y;
         this.direction = direction;
-        towerColor = new Color(70, 70, 70);
-        tankColor = new Color(0, 255, 0);
-        try {
-            myTankImage1 = ImageIO.read(new File(IMAGE_NAME_UP));
-            myTankImage2 = ImageIO.read(new File(IMAGE_NAME_DOWN));
-            myTankImage3 = ImageIO.read(new File(IMAGE_NAME_LEFT));
-            myTankImage4 = ImageIO.read(new File(IMAGE_NAME_RIGHT));
-        }
-        catch (IOException e) {
-            System.err.print("Can't find image ");
-        }
     }
 
     @Override
@@ -90,28 +61,28 @@ public abstract class AbstractTank implements Tank {
         if (!destroyed) {
 
             if (this.getDirection().getId() == 1) {
-                g.drawImage(myTankImage1, this.getX(), this.getY(), new ImageObserver() {
+                g.drawImage(myTankImageUp, this.getX(), this.getY(), new ImageObserver() {
                     @Override
                     public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
                         return false;
                     }
                 });
             } else if (this.getDirection().getId() == 2) {
-                g.drawImage(myTankImage2, this.getX(), this.getY(), new ImageObserver() {
+                g.drawImage(myTankImageDown, this.getX(), this.getY(), new ImageObserver() {
                     @Override
                     public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
                         return false;
                     }
                 });
             } else if (this.getDirection().getId() == 3) {
-                g.drawImage(myTankImage3, this.getX(), this.getY(), new ImageObserver() {
+                g.drawImage(myTankImageLeft, this.getX(), this.getY(), new ImageObserver() {
                     @Override
                     public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
                         return false;
                     }
                 });
             } else {
-                g.drawImage(myTankImage4, this.getX(), this.getY(), new ImageObserver() {
+                g.drawImage(myTankImageRight, this.getX(), this.getY(), new ImageObserver() {
                     @Override
                     public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
                         return false;
@@ -142,36 +113,9 @@ public abstract class AbstractTank implements Tank {
     public Bullet fire() throws InterruptedException {
 
         Bullet bullet = new Bullet(x + 25, y + 25, direction);
-        actionField.processFire(bullet);
+        setBullet(bullet);
+        actionField.processFire(this);
         return bullet;
-    }
-
-    public void clean() throws InterruptedException {
-
-        turn(Direction.LEFT);
-        while (isEmptyX()) {
-            fire();
-        }
-
-        moveToQuadrant(getY(), 0);
-        turn(Direction.UP);
-        while (isEmptyY()) {
-            fire();
-        }
-
-        moveToQuadrant(0, 0);
-        turn(Direction.RIGHT);
-        while (isEmptyX()) {
-            fire();
-        }
-
-        for (int i = 0; i < battleField.getBattleField().length; i++) {
-            moveToQuadrant(0, i * 64);
-            turn(Direction.DOWN);
-            while (isEmptyY()) {
-                fire();
-            }
-        }
     }
 
     public boolean isEmptyY() {
@@ -283,22 +227,22 @@ public abstract class AbstractTank implements Tank {
             int steps = (tankXNew - getX()) / 64;
             for (int step = 0; step < steps; step++) {
                 turn(Direction.RIGHT);
-                if ((battleField.getBattleField()[getY() / 64][getX() / 64 + 1] instanceof Brick) ||
-                        (actionField.getTank().getY() / 64 == actionField.getAgressor().getY() / 64) &&
-                                ((actionField.getTank().getX() / 64 + 1) == actionField.getAgressor().getX() / 64)) {
-                    fire();
-                }
+//                if ((battleField.getBattleField()[getY() / 64][getX() / 64 + 1] instanceof Brick) ||
+//                        (actionField.getTank().getY() / 64 == actionField.getAgressor().getY() / 64) &&
+//                                ((actionField.getTank().getX() / 64 + 1) == actionField.getAgressor().getX() / 64)) {
+//                    fire();
+//                }
                 move();
             }
         } else if ((tankXNew - getX()) < 0) {
             int steps = Math.abs((tankXNew - getX()) / 64);
             for (int step = 0; step < steps; step++) {
                 turn(Direction.LEFT);
-                if ((battleField.getBattleField()[getY() / 64][getX() / 64 - 1] instanceof Brick) ||
-                        (actionField.getTank().getY() / 64 == actionField.getAgressor().getY() / 64) &&
-                                ((actionField.getTank().getX() / 64 - 1) == actionField.getAgressor().getX() / 64)) {
-                    fire();
-                }
+//                if ((battleField.getBattleField()[getY() / 64][getX() / 64 - 1] instanceof Brick) ||
+//                        (actionField.getTank().getY() / 64 == actionField.getAgressor().getY() / 64) &&
+//                                ((actionField.getTank().getX() / 64 - 1) == actionField.getAgressor().getX() / 64)) {
+//                    fire();
+//                }
                 move();
             }
         }
@@ -307,22 +251,22 @@ public abstract class AbstractTank implements Tank {
             int steps = (tankYNew - getY()) / 64;
             for (int step = 0; step < steps; step++) {
                 turn(Direction.DOWN);
-                if ((battleField.getBattleField()[getY() / 64 + 1][getX()/64] instanceof Brick) ||
-                        ((actionField.getTank().getY() / 64 + 1) == actionField.getAgressor().getY() / 64) &&
-                                (actionField.getTank().getX() / 64 == actionField.getAgressor().getX() / 64)) {
-                    fire();
-                }
+//                if ((battleField.getBattleField()[getY() / 64 + 1][getX()/64] instanceof Brick) ||
+//                        ((actionField.getTank().getY() / 64 + 1) == actionField.getAgressor().getY() / 64) &&
+//                                (actionField.getTank().getX() / 64 == actionField.getAgressor().getX() / 64)) {
+//                    fire();
+//                }
                 move();
             }
         } else if ((tankYNew - getY()) < 0) {
             int steps = Math.abs((getY() - tankYNew) / 64);
             for (int step = 0; step < steps; step++) {
                 turn(Direction.UP);
-                if ((battleField.getBattleField()[getY() / 64 - 1][getX()/64] instanceof Brick)  ||
-                        ((actionField.getTank().getY() / 64 - 1) == actionField.getAgressor().getY() / 64) &&
-                                (actionField.getTank().getX()/64 == actionField.getAgressor().getX() / 64)) {
-                    fire();
-                }
+//                if ((battleField.getBattleField()[getY() / 64 - 1][getX()/64] instanceof Brick)  ||
+//                        ((actionField.getTank().getY() / 64 - 1) == actionField.getAgressor().getY() / 64) &&
+//                                (actionField.getTank().getX()/64 == actionField.getAgressor().getX() / 64)) {
+//                    fire();
+//                }
                 move();
             }
         }
@@ -364,4 +308,13 @@ public abstract class AbstractTank implements Tank {
     public boolean isDestroyed() {
         return destroyed;
     }
+
+    public Bullet getBullet() {
+        return bullet;
+    }
+
+    public void setBullet(Bullet bullet) {
+        this.bullet = bullet;
+    }
+
 }
