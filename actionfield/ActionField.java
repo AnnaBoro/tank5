@@ -30,7 +30,6 @@ public class ActionField extends JPanel{
         int y2 = xy[1];
         int x2 = xy[0];
         agressor = new Tiger(this, bf, x2, y2, Direction.DOWN);
-
         defender = new T34(this, bf);
         defender2 = new BT7(this, bf, 320, 512, Direction.UP);
         initFrame();
@@ -38,12 +37,12 @@ public class ActionField extends JPanel{
 
     public void runTheGame() throws Exception {
 
-//        while (!bf.getBattleField()[8][4].isDestroyed() && bf.getBattleField()[8][4] instanceof Eagle) {
-//            processAction(defender.setUp(), defender);
-//        }
         while (!bf.getBattleField()[8][4].isDestroyed() && bf.getBattleField()[8][4] instanceof Eagle) {
-            processAction(defender2.setUp(), defender2);
+            processAction(defender.setUp(), defender);
         }
+//        while (!bf.getBattleField()[8][4].isDestroyed() && bf.getBattleField()[8][4] instanceof Eagle) {
+//            processAction(defender2.setUp(), defender2);
+//        }
 //        while (!bf.getBattleField()[8][4].isDestroyed() && bf.getBattleField()[8][4] instanceof Eagle) {
 //            processAction(agressor.setUp(), agressor);
 //        }

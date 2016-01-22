@@ -26,11 +26,16 @@ public class Water extends FieldObject {
     @Override
     public void draw(Graphics g) {
 
+        Graphics2D g2d = (Graphics2D) g.create();
+        Composite compositeOriginal = g2d.getComposite();
+        AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.8f);
+        g2d.setComposite(alphaComposite);
         g.drawImage(myImage, x, y, new ImageObserver() {
             @Override
             public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
                 return false;
             }
         });
+        g2d.setComposite(compositeOriginal);
     }
 }

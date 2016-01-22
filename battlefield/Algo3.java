@@ -26,11 +26,11 @@ public class Algo3 extends Algo{
                     field[i][j].setIsMark(true);
                     field[i][startIndexX].setNum(d);
                     field[i][startIndexX].setIsMark(true);
-                } else if (ff[i][j].equalsIgnoreCase("B")) {
+                } else if (ff[i][j].equalsIgnoreCase("B") || ff[i][j].equalsIgnoreCase("R")) {
                     field[i][j] = new ObjAlgo();
                     field[i][j].setNum(-2);
                     field[i][j].setIsMark(true);
-                } else if (ff[i][j].equalsIgnoreCase(" ")) {
+                } else if (ff[i][j].equalsIgnoreCase(" ") || ff[i][j].equalsIgnoreCase("W")) {
                     field[i][j] = new ObjAlgo();
                     field[i][j].setNum(-1);
                 }

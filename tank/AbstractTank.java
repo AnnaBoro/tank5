@@ -60,29 +60,33 @@ public abstract class AbstractTank implements Tank {
 
         if (!destroyed) {
 
+            Graphics2D g2d = (Graphics2D) g.create();
+            AlphaComposite alphaComposite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.8f);
+            g2d.setComposite(alphaComposite);
+
             if (this.getDirection().getId() == 1) {
-                g.drawImage(myTankImageUp, this.getX(), this.getY(), new ImageObserver() {
+                g2d.drawImage(myTankImageUp, this.getX(), this.getY(),new ImageObserver() {
                     @Override
                     public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
                         return false;
                     }
                 });
             } else if (this.getDirection().getId() == 2) {
-                g.drawImage(myTankImageDown, this.getX(), this.getY(), new ImageObserver() {
+                g2d.drawImage(myTankImageDown, this.getX(), this.getY(),new ImageObserver() {
                     @Override
                     public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
                         return false;
                     }
                 });
             } else if (this.getDirection().getId() == 3) {
-                g.drawImage(myTankImageLeft, this.getX(), this.getY(), new ImageObserver() {
+                g2d.drawImage(myTankImageLeft, this.getX(), this.getY(),new ImageObserver() {
                     @Override
                     public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
                         return false;
                     }
                 });
             } else {
-                g.drawImage(myTankImageRight, this.getX(), this.getY(), new ImageObserver() {
+                g2d.drawImage(myTankImageRight, this.getX(), this.getY(),new ImageObserver() {
                     @Override
                     public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
                         return false;

@@ -22,7 +22,7 @@ public class Algo2 extends Algo{
 
         for (int i = 0; i < ff.length; i++) {
             for (int j = 0; j < ff[i].length; j++) {
-                if (ff[i][j].equalsIgnoreCase(" ")) {
+                if (ff[i][j].equalsIgnoreCase(" ")  || ff[i][j].equalsIgnoreCase("W")) {
                     field[i][j] = new ObjAlgo();
                     field[i][j].setNum(-1);
                 }

@@ -1,6 +1,7 @@
 package lesson5_8.tank5.tank;
 
 import lesson5_8.tank5.actionfield.ActionField;
+import lesson5_8.tank5.battlefield.Algo1;
 import lesson5_8.tank5.battlefield.Algo2;
 import lesson5_8.tank5.battlefield.BattleField;
 

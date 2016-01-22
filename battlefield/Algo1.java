@@ -23,11 +23,11 @@ public class Algo1 extends Algo{
                         field[i][j] = new ObjAlgo();
                         field[i][j].setNum(d);
                         field[i][j].setIsMark(true);
-                    } else if (ff[i][j].equalsIgnoreCase("B")) {
+                    } else if (ff[i][j].equalsIgnoreCase("B") || ff[i][j].equalsIgnoreCase("R")) {
                         field[i][j] = new ObjAlgo();
                         field[i][j].setNum(-2);
                         field[i][j].setIsMark(true);
-                    } else if (ff[i][j].equalsIgnoreCase(" ")) {
+                    } else if (ff[i][j].equalsIgnoreCase(" ") || ff[i][j].equalsIgnoreCase("W")) {
                         field[i][j] = new ObjAlgo();
                         field[i][j].setNum(-1);
                     }
@@ -135,6 +135,7 @@ public class Algo1 extends Algo{
             pathY[0] = endIndexY;
             pathX[0] = endIndexX;
         }
+
         for(int i = lengthPath; i >= 0; i --) {
             path.add(new int[]{pathY[i], pathX[i]});
             System.out.println("__" + pathY[i] + "__" + pathX[i] + "__");
